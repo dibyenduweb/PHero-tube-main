@@ -1,4 +1,14 @@
-//to fetch category function
+// Global variable to keep track of the sorting order
+let shortByView = false;
+
+// // Function to toggle the sorting order and reload content
+// const shorting = () => {
+//     console.log(shorting);
+//     shortByView = !shortByView;
+//     loadContent('1000');
+// };
+
+// To fetch category function
 const tubeCategory = async () => {
     const response = await fetch('https://openapi.programming-hero.com/api/videos/categories');
     const data = await response.json();
@@ -23,19 +33,47 @@ const loadContent = async (categoryId) => {
     const cardContain = document.getElementById('card-contain');
     cardContain.innerHTML = '';
 
-    // drowning card
-    const errorCard = document.getElementById('error-card')
+    // Sort by order 
+    if(shortByView){
+        let firstSort = allVedios.sort((x,y) => {
+            let sortValue = x.others.views.split('K')[0];
+            let firstThousand = parseInt(sortValue.split('.')[0]) * 1000 ;
+            let firstHundred = parseInt(sortValue.split('.')[1] ) * 100;
+            if( !firstHundred ){
+                firstHundred = 0;
+                }
+            let firstTotalViews = firstThousand + firstHundred;
 
-    if (data.data.length === 0) {
-        errorCard.classList.remove('hidden')
-    } else {
-        errorCard.classList.add('hidden')
+
+
+            let sortValue2 = y.others.views.split('K')[0];
+            let secondThousand = parseInt(sortValue2.split('.')[0]) * 1000 ;
+            let secondHundred = parseInt(sortValue2.split('.')[1] ) * 100;
+            if( !secondHundred ){
+                secondHundred = 0;
+                }
+            let secondTotalViews = secondThousand + secondHundred;
+
+            if( firstTotalViews > secondTotalViews ) return 1;
+            else return -1;
+        })
+        allVedios = firstSort.reverse()
+         
+        sortEnd = false;
     }
 
-    // fetch data
+    // Drowning card
+    const errorCard = document.getElementById('error-card');
 
+    if (data.data.length === 0) {
+        errorCard.classList.remove('hidden');
+    } else {
+        errorCard.classList.add('hidden');
+    }
+
+    // Fetch data
     const cardElements = data.data.map((content) => {
-        // time converter
+        // Time converter
         let seconds = content.others.posted_date;
         const hours = Math.floor(seconds / 3600);
         const m = seconds % 3600;
@@ -55,7 +93,6 @@ const loadContent = async (categoryId) => {
                         </div>
                         <div class="flex items-center ">
                             <p>${content.authors[0].profile_name}</p>
-                            
                             <p class="mr-28">${content.authors[0]?.verified ? '<img src="./img/fi_10629607.svg" alt="icon">' : '' }</p>
                             <p class="absolute bg-gray-600 font-light text-white rounded px-4 bottom-48 right-4">${content.others.posted_date ? `${hours > 12 ? 'A while ago' : `${hours} hours ${minutes} minutes ago`}` : ''}</p>
                         </div>
@@ -74,4 +111,4 @@ const loadContent = async (categoryId) => {
 };
 
 tubeCategory();
-loadContent(1000);
+loadContent('1000');
