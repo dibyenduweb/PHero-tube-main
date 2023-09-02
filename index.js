@@ -2,11 +2,7 @@
 let shortByView = false;
 
 // // Function to toggle the sorting order and reload content
-// const shorting = () => {
-//     console.log(shorting);
-//     shortByView = !shortByView;
-//     loadContent('1000');
-// };
+
 
 // To fetch category function
 const tubeCategory = async () => {
@@ -34,33 +30,8 @@ const loadContent = async (categoryId) => {
     cardContain.innerHTML = '';
 
     // Sort by order 
-    if(shortByView){
-        let firstSort = allVedios.sort((x,y) => {
-            let sortValue = x.others.views.split('K')[0];
-            let firstThousand = parseInt(sortValue.split('.')[0]) * 1000 ;
-            let firstHundred = parseInt(sortValue.split('.')[1] ) * 100;
-            if( !firstHundred ){
-                firstHundred = 0;
-                }
-            let firstTotalViews = firstThousand + firstHundred;
-
-
-
-            let sortValue2 = y.others.views.split('K')[0];
-            let secondThousand = parseInt(sortValue2.split('.')[0]) * 1000 ;
-            let secondHundred = parseInt(sortValue2.split('.')[1] ) * 100;
-            if( !secondHundred ){
-                secondHundred = 0;
-                }
-            let secondTotalViews = secondThousand + secondHundred;
-
-            if( firstTotalViews > secondTotalViews ) return 1;
-            else return -1;
-        })
-        allVedios = firstSort.reverse()
-         
-        sortEnd = false;
-    }
+    
+  
 
     // Drowning card
     const errorCard = document.getElementById('error-card');
